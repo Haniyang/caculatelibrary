@@ -1,0 +1,220 @@
+Microsoft Windows [版本 10.0.19045.3448]
+(c) Microsoft Corporation。保留所有权利。
+
+C:\Users\ASUS>mysql -u root -p
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 5.7.43-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database test6;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| demo               |
+| mysql              |
+| performance_schema |
+| sys                |
+| test1              |
+| test4              |
+| test5              |
+| test6              |
++--------------------+
+9 rows in set (0.00 sec)
+
+mysql> use test6;
+Database changed
+mysql> create table teacher
+    -> (
+    -> T,varchar(3),
+    -> D,varchar(10),
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varchar(3),
+D,varchar(10),
+)' at line 3
+mysql> create table teacher
+    -> (
+    -> T varchar(3),
+    -> Tname varchar(10),
+    -> D varchar(3),
+    -> Slaray int
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> select * from teacher;
+Empty set (0.01 sec)
+
+mysql> insert into teacher values('001','Maria','01',1200),
+    -> ('002','Kangkang','02',1300),
+    -> ('003','Jane','02',2200),
+    -> ('004','huahua','03',3200),
+    -> ('005','meimei','04',10222);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from teacher;
++------+----------+------+--------+
+| T    | Tname    | D    | Slaray |
++------+----------+------+--------+
+| 001  | Maria    | 01   |   1200 |
+| 002  | Kangkang | 02   |   1300 |
+| 003  | Jane     | 02   |   2200 |
+| 004  | huahua   | 03   |   3200 |
+| 005  | meimei   | 04   |  10222 |
++------+----------+------+--------+
+5 rows in set (0.00 sec)
+
+mysql> create table student
+    -> (
+    -> Sname varchar(10),
+    -> Sgrade int,
+    -> D varchar(3),
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 6
+mysql> use test6;
+Database changed
+mysql> create table student
+    -> (
+    ->  Sname varchar(10),
+    ->  Sgrade int,
+    ->  D varchar(3),
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 6
+mysql> use test6;
+Database changed
+mysql> create table workmates
+    -> (
+    -> id varchar(10),
+    -> name varchar(10),
+    -> age int
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_test6 |
++-----------------+
+| teacher         |
+| workmates       |
++-----------------+
+2 rows in set (0.01 sec)
+
+mysql> insert into workmates values
+    -> ('22110','heye',20),
+    -> ('22111','rourou',20),
+    -> ('22111','linlin',21)
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 5
+mysql> use test6;
+Database changed
+mysql> insert into workmates values
+    -> ('22110','heye',20),
+    -> ('22111','rourou',20),
+    -> ('22111','linlin',21)
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 5
+mysql>  insert into workmates values
+    -> ('22110','heye',20),
+    -> ('22111','rourou',20),
+    ->  ('22111','linlin',21);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from workmates;
++-------+--------+------+
+| id    | name   | age  |
++-------+--------+------+
+| 22110 | heye   |   20 |
+| 22111 | rourou |   20 |
+| 22111 | linlin |   21 |
++-------+--------+------+
+3 rows in set (0.00 sec)
+
+mysql> select id from workmates;
++-------+
+| id    |
++-------+
+| 22110 |
+| 22111 |
+| 22111 |
++-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into workmates (id,name,age) values('22119','fubao',22);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from workmates;
++-------+--------+------+
+| id    | name   | age  |
++-------+--------+------+
+| 22110 | heye   |   20 |
+| 22111 | rourou |   20 |
+| 22111 | linlin |   21 |
+| 22119 | fubao  |   22 |
++-------+--------+------+
+4 rows in set (0.00 sec)
+
+mysql> update workmates set id='22113',name='lili',age=21
+    -> where id='22110';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from workmates;
++-------+--------+------+
+| id    | name   | age  |
++-------+--------+------+
+| 22113 | lili   |   21 |
+| 22111 | rourou |   20 |
+| 22111 | linlin |   21 |
+| 22119 | fubao  |   22 |
++-------+--------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from workmates order by age asc;
++-------+--------+------+
+| id    | name   | age  |
++-------+--------+------+
+| 22111 | rourou |   20 |
+| 22113 | lili   |   21 |
+| 22111 | linlin |   21 |
+| 22119 | fubao  |   22 |
++-------+--------+------+
+4 rows in set (0.01 sec)
+
+mysql> select * from workmates order by age desc;
++-------+--------+------+
+| id    | name   | age  |
++-------+--------+------+
+| 22119 | fubao  |   22 |
+| 22113 | lili   |   21 |
+| 22111 | linlin |   21 |
+| 22111 | rourou |   20 |
++-------+--------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from workmates
+    -> where name='fubao';
++-------+-------+------+
+| id    | name  | age  |
++-------+-------+------+
+| 22119 | fubao |   22 |
++-------+-------+------+
+1 row in set (0.01 sec)
+
+mysql> select * from workmates
+    -> where age>20 and name='rourou';
+Empty set (0.01 sec)
+
+mysql>

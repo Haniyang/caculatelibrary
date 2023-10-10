@@ -1,0 +1,261 @@
+Microsoft Windows [版本 10.0.19045.3448]
+(c) Microsoft Corporation。保留所有权利。
+
+C:\Users\ASUS>mysql -u root -p
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 5.7.43-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show tables;
+ERROR 1046 (3D000): No database selected
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| demo               |
+| mysql              |
+| performance_schema |
+| sys                |
+| test1              |
+| test4              |
+| test5              |
+| test6              |
++--------------------+
+9 rows in set (0.03 sec)
+
+mysql> use test6;
+Database changed
+mysql> create datable test7;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'datable test7' at line 1
+mysql> create database test7;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use test7;
+Database changed
+mysql> create table student
+    -> (
+    -> name varchar(10),
+    -> age int,
+    -> id varchar(10),
+    -> grade int
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> select * from student;
+Empty set (0.02 sec)
+
+mysql> insert into student
+    -> (name,age,id,grade) values
+    -> ('huahua',20,'22110',3),
+    -> ('yangyang',19,'22111',3),
+    -> ('yueyang',23,'22112',7),
+    -> ('yuyu',21,'22113',4),
+    -> ('zhenzhen',20,'22114',4);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
++----------+------+-------+-------+
+| name     | age  | id    | grade |
++----------+------+-------+-------+
+| huahua   |   20 | 22110 |     3 |
+| yangyang |   19 | 22111 |     3 |
+| yueyang  |   23 | 22112 |     7 |
+| yuyu     |   21 | 22113 |     4 |
+| zhenzhen |   20 | 22114 |     4 |
++----------+------+-------+-------+
+5 rows in set (0.01 sec)
+
+mysql> alert table student add (name,age,id,grade) values ('lili',20,'22115',2);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'alert table student add (name,age,id,grade) values ('lili',20,'22115',2)' at line 1
+mysql>  alert table student add (name,age,id,grade) ('lili',20,'22115',2);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'alert table student add (name,age,id,grade) ('lili',20,'22115',2)' at line 1
+mysql>  alert table student add (name,age,id,grade)+('lili',20,'22115',2);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'alert table student add (name,age,id,grade)+('lili',20,'22115',2)' at line 1
+mysql> alter table student add (name,age,id,grade)+('lili',20,'22115',2);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'age,id,grade)+('lili',20,'22115',2)' at line 1
+mysql> alter table student add (name,age,id,grade) ('lili',20,'22115',2);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'age,id,grade) ('lili',20,'22115',2)' at line 1
+mysql> insert into student (name,age,id,grade) values  ('lili',21,'22116',3),
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> insert into student (name,age,id,grade) values  ('lili',21,'22116',3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from student;
++----------+------+-------+-------+
+| name     | age  | id    | grade |
++----------+------+-------+-------+
+| huahua   |   20 | 22110 |     3 |
+| yangyang |   19 | 22111 |     3 |
+| yueyang  |   23 | 22112 |     7 |
+| yuyu     |   21 | 22113 |     4 |
+| zhenzhen |   20 | 22114 |     4 |
+| lili     |   21 | 22116 |     3 |
++----------+------+-------+-------+
+6 rows in set (0.00 sec)
+
+mysql> delete from student where name='lili';
+Query OK, 1 row affected (0.01 sec)
+
+mysql>  select * from student;
++----------+------+-------+-------+
+| name     | age  | id    | grade |
++----------+------+-------+-------+
+| huahua   |   20 | 22110 |     3 |
+| yangyang |   19 | 22111 |     3 |
+| yueyang  |   23 | 22112 |     7 |
+| yuyu     |   21 | 22113 |     4 |
+| zhenzhen |   20 | 22114 |     4 |
++----------+------+-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> alter table student rename stu;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_test7 |
++-----------------+
+| stu             |
++-----------------+
+1 row in set (0.01 sec)
+
+mysql> alter table stu change id ids varchar(11);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from stu;
++----------+------+-------+-------+
+| name     | age  | ids   | grade |
++----------+------+-------+-------+
+| huahua   |   20 | 22110 |     3 |
+| yangyang |   19 | 22111 |     3 |
+| yueyang  |   23 | 22112 |     7 |
+| yuyu     |   21 | 22113 |     4 |
+| zhenzhen |   20 | 22114 |     4 |
++----------+------+-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> update stu set grade=7 where name='yangyang';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from stu;
++----------+------+-------+-------+
+| name     | age  | ids   | grade |
++----------+------+-------+-------+
+| huahua   |   20 | 22110 |     3 |
+| yangyang |   19 | 22111 |     7 |
+| yueyang  |   23 | 22112 |     7 |
+| yuyu     |   21 | 22113 |     4 |
+| zhenzhen |   20 | 22114 |     4 |
++----------+------+-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from stu where name='yueyang';
++---------+------+-------+-------+
+| name    | age  | ids   | grade |
++---------+------+-------+-------+
+| yueyang |   23 | 22112 |     7 |
++---------+------+-------+-------+
+1 row in set (0.00 sec)
+
+mysql> select age from stu where age > 20;
++------+
+| age  |
++------+
+|   23 |
+|   21 |
++------+
+2 rows in set (0.00 sec)
+
+mysql> alter table stu add SumCourse int;
+Query OK, 0 rows affected (0.13 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from stu;
++----------+------+-------+-------+-----------+
+| name     | age  | ids   | grade | SumCourse |
++----------+------+-------+-------+-----------+
+| huahua   |   20 | 22110 |     3 |      NULL |
+| yangyang |   19 | 22111 |     7 |      NULL |
+| yueyang  |   23 | 22112 |     7 |      NULL |
+| yuyu     |   21 | 22113 |     4 |      NULL |
+| zhenzhen |   20 | 22114 |     4 |      NULL |
++----------+------+-------+-------+-----------+
+5 rows in set (0.01 sec)
+
+mysql> create table teacher;
+ERROR 1113 (42000): A table must have at least 1 column
+mysql> create table teacher
+    -> (name varchar(10),
+    -> xk varchar(12),
+    -> grade int);
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> select * from teacher;
+Empty set (0.02 sec)
+
+mysql> insert into teacher
+    -> (name,xk,grade) values
+    -> ('linlin','jisuanji',3),
+    -> ('zhizhi','jisuanji',4),
+    -> ('naidou','jisuanji',3),
+    -> ('xingjie','jisuanji',7);
+Query OK, 4 rows affected (0.02 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from teacher;
++---------+----------+-------+
+| name    | xk       | grade |
++---------+----------+-------+
+| linlin  | jisuanji |     3 |
+| zhizhi  | jisuanji |     4 |
+| naidou  | jisuanji |     3 |
+| xingjie | jisuanji |     7 |
++---------+----------+-------+
+4 rows in set (0.01 sec)
+
+mysql> select teacher[name] from stu,teacher
+    -> where stu.age=teacher.age;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[name] from stu,teacher
+where stu.age=teacher.age' at line 1
+mysql> select ids from stu,teacher
+    -> where stu.grade=teacher.grade and grade=7;
+ERROR 1052 (23000): Column 'grade' in where clause is ambiguous
+mysql> select ids from stu,teacher
+    -> where grade=7;
+ERROR 1052 (23000): Column 'grade' in where clause is ambiguous
+mysql> select stu.ids from stu,teacher
+    -> where stu.grade=teacher.grade and garde=7;
+ERROR 1054 (42S22): Unknown column 'garde' in 'where clause'
+mysql>
+mysql>  select stu.ids from stu,teacher
+    -> where stu.grade=teacher.grade and stu.garde=7;
+ERROR 1054 (42S22): Unknown column 'stu.garde' in 'where clause'
+mysql> select stu.ids from stu,teacher
+    ->  where stu.grade=teacher.grade;
++-------+
+| ids   |
++-------+
+| 22110 |
+| 22110 |
+| 22111 |
+| 22112 |
+| 22113 |
+| 22114 |
++-------+
+6 rows in set (0.02 sec)
+
+mysql>

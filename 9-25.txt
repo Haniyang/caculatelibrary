@@ -1,0 +1,249 @@
+Microsoft Windows [版本 10.0.19045.3448]
+(c) Microsoft Corporation。保留所有权利。
+
+C:\Users\ASUS>mysql -u root -p
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 5.7.43-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| demo               |
+| mysql              |
+| performance_schema |
+| sys                |
+| test1              |
+| test10             |
+| test4              |
+| test5              |
+| test6              |
+| test7              |
+| test8              |
++--------------------+
+12 rows in set (0.00 sec)
+
+mysql> drop databases test1,test10;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'databases test1,test10' at line 1
+mysql> drop database test1;
+Query OK, 5 rows affected (0.07 sec)
+
+mysql> drop database test1,
+    -> drop database test10;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '
+drop database test10' at line 1
+mysql> drop database test1;
+ERROR 1008 (HY000): Can't drop database 'test1'; database doesn't exist
+mysql> drop database test10;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> drop database test4;
+Query OK, 2 rows affected (0.06 sec)
+
+mysql> drop database test5;
+Query OK, 3 rows affected (0.06 sec)
+
+mysql> drop database test6;
+Query OK, 2 rows affected (0.03 sec)
+
+mysql> drop database test7;
+Query OK, 2 rows affected (0.04 sec)
+
+mysql> drop database test8;
+Query OK, 2 rows affected (0.03 sec)
+
+mysql> drop database mysql;
+Query OK, 31 rows affected, 2 warnings (0.23 sec)
+
+mysql> drop database sys;
+Query OK, 101 rows affected, 2 warnings (0.13 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| demo               |
+| performance_schema |
++--------------------+
+3 rows in set (0.00 sec)
+
+mysql> create database test character set utf8;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use test;
+Database changed
+mysql> create table course
+    -> (
+    -> C varchar(3),
+    -> Course varchar(12),
+    -> Chours int,
+    -> Credit int,
+    -> T varchar(3)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into course
+    -> (C,Course,Chours,Credit,T) values
+    -> ('001','数据库',40,6,'001'),
+    -> ('003','数据结构',40,6,'003'),
+    -> ('004','编译原理',40,6,'001'),
+    -> ('005','C语言',30,5,'002'),
+    -> ('002','高数',80,12,'004');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from course;
++------+--------------+--------+--------+------+
+| C    | Course       | Chours | Credit | T    |
++------+--------------+--------+--------+------+
+| 001  | 数据库       |     40 |      6 | 001  |
+| 003  | 数据结构     |     40 |      6 | 003  |
+| 004  | 编译原理     |     40 |      6 | 001  |
+| 005  | C语言        |     30 |      5 | 002  |
+| 002  | 高数         |     80 |     12 | 004  |
++------+--------------+--------+--------+------+
+5 rows in set (0.00 sec)
+
+mysql> create table student
+    -> (
+    -> S varchar(10),
+    -> Sname varchar(12),
+    -> Ssex varchar(4),
+    -> Sage int,
+    -> D varchar(3),
+    -> Sclass varchar(10）
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '10）
+)' at line 8
+mysql>  create table student
+    -> (
+    ->  S varchar(10),
+    ->  Sname varchar(12),
+    -> Ssex varchar(4),
+    -> Sage int,
+    -> D varchar(3),
+    ->  Sclass varchar(10)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from student;
+Empty set (0.01 sec)
+
+mysql> insert into student
+    -> (S,Sname,Ssex,Sage,D,Sclass) values
+    -> ('98030101','张三','男',20,'03','980301'),
+    -> ('98030102','张四','女',20,'03','980301'),
+    -> ('98030103','张五','男',19,'03','980301'),
+    -> ('98030101','王三','男',20,'04','980302'),
+    -> ('98030102','王四','男',21,'04','980302'),
+    -> ('98030103','王五','女',19,'04','980302');
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
++----------+--------+------+------+------+--------+
+| S        | Sname  | Ssex | Sage | D    | Sclass |
++----------+--------+------+------+------+--------+
+| 98030101 | 张三   | 男   |   20 | 03   | 980301 |
+| 98030102 | 张四   | 女   |   20 | 03   | 980301 |
+| 98030103 | 张五   | 男   |   19 | 03   | 980301 |
+| 98030101 | 王三   | 男   |   20 | 04   | 980302 |
+| 98030102 | 王四   | 男   |   21 | 04   | 980302 |
+| 98030103 | 王五   | 女   |   19 | 04   | 980302 |
++----------+--------+------+------+------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select S,Sname,Ssex,Sage,Sclass
+    -> from student;
++----------+--------+------+------+--------+
+| S        | Sname  | Ssex | Sage | Sclass |
++----------+--------+------+------+--------+
+| 98030101 | 张三   | 男   |   20 | 980301 |
+| 98030102 | 张四   | 女   |   20 | 980301 |
+| 98030103 | 张五   | 男   |   19 | 980301 |
+| 98030101 | 王三   | 男   |   20 | 980302 |
+| 98030102 | 王四   | 男   |   21 | 980302 |
+| 98030103 | 王五   | 女   |   19 | 980302 |
++----------+--------+------+------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select Snmae,Sage
+    -> from student;
+ERROR 1054 (42S22): Unknown column 'Snmae' in 'field list'
+mysql> select Sname,Sage
+    -> from student;
++--------+------+
+| Sname  | Sage |
++--------+------+
+| 张三   |   20 |
+| 张四   |   20 |
+| 张五   |   19 |
+| 王三   |   20 |
+| 王四   |   21 |
+| 王五   |   19 |
++--------+------+
+6 rows in set (0.00 sec)
+
+mysql> Select Sage,Sname
+    -> from student where Sage>=19;
++------+--------+
+| Sage | Sname  |
++------+--------+
+|   20 | 张三   |
+|   20 | 张四   |
+|   19 | 张五   |
+|   20 | 王三   |
+|   21 | 王四   |
+|   19 | 王五   |
++------+--------+
+6 rows in set (0.01 sec)
+
+mysql> select C from course where credit>5
+    -> order by Chours DESC;
++------+
+| C    |
++------+
+| 002  |
+| 001  |
+| 003  |
+| 004  |
++------+
+4 rows in set (0.00 sec)
+
+mysql> select S,Sname from student
+    -> where Sname like '张%';
++----------+--------+
+| S        | Sname  |
++----------+--------+
+| 98030101 | 张三   |
+| 98030102 | 张四   |
+| 98030103 | 张五   |
++----------+--------+
+3 rows in set (0.01 sec)
+
+mysql> select Sname from student
+    -> where Sname like '张__';
+Empty set (0.00 sec)
+
+mysql> select S,Sname from student
+    -> where Sname not like '张%';
++----------+--------+
+| S        | Sname  |
++----------+--------+
+| 98030101 | 王三   |
+| 98030102 | 王四   |
+| 98030103 | 王五   |
++----------+--------+
+3 rows in set (0.00 sec)

@@ -1,0 +1,143 @@
+Microsoft Windows [版本 10.0.19045.3448]
+(c) Microsoft Corporation。保留所有权利。
+
+C:\Users\ASUS>mysql -u root -p
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 16
+Server version: 5.7.43-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| demo               |
+| performance_schema |
+| test               |
++--------------------+
+4 rows in set (0.03 sec)
+
+mysql> use test;
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_test |
++----------------+
+| course         |
+| sc             |
+| student        |
++----------------+
+3 rows in set (0.01 sec)
+
+mysql> create table teacher
+    -> (T varchar(3),
+    -> Tname varchar(12),
+    -> D varchar(3),
+    -> Salary int);
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> insert into teacher
+    -> (T,Tname,D,Salary) values
+    -> ('001','赵三','01',1200),
+    -> ('002','赵四','03',1400),
+    -> ('003','赵五','03',1000),
+    -> ('004','赵六','04',1100);
+Query OK, 4 rows affected (0.03 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from teacher;
++------+--------+------+--------+
+| T    | Tname  | D    | Salary |
++------+--------+------+--------+
+| 001  | 赵三   | 01   |   1200 |
+| 002  | 赵四   | 03   |   1400 |
+| 003  | 赵五   | 03   |   1000 |
+| 004  | 赵六   | 04   |   1100 |
++------+--------+------+--------+
+4 rows in set (0.01 sec)
+
+mysql> select distinct Sname from student
+    -> where exists(select * from sc,course,teacher where sc.C=course.C and sc.S=student.S and course.T=teacher.T and Tname='赵三');
++--------+
+| Sname  |
++--------+
+| 张三   |
+| 王三   |
++--------+
+2 rows in set (0.06 sec)
+
+mysql> select Sname from student
+    -> where not exists
+    -> (select * from course where course.T='001' and not exists (select * from sc where S=student.S and C=course.C));
+Empty set (0.00 sec)
+
+mysql> select Sname from student
+    -> where not exists (select * from course,sc,teacher where Tname='李明' and course.T=teacher.T and course.C = sc.C and S=student.S);
++--------+
+| Sname  |
++--------+
+| 张三   |
+| 张五   |
+| 王三   |
+| 王五   |
++--------+
+4 rows in set (0.03 sec)
+
+mysql> select T1.Tname as TR1,T2.Tname as TR2,T1.Salary-T2.Salary
+    -> from teacher T1,teacher T2
+    -> where T1.Salary>T2.Salary;
++--------+--------+---------------------+
+| TR1    | TR2    | T1.Salary-T2.Salary |
++--------+--------+---------------------+
+| 赵四   | 赵三   |                 200 |
+| 赵三   | 赵五   |                 200 |
+| 赵四   | 赵五   |                 400 |
+| 赵六   | 赵五   |                 100 |
+| 赵三   | 赵六   |                 100 |
+| 赵四   | 赵六   |                 300 |
++--------+--------+---------------------+
+6 rows in set (0.02 sec)
+
+mysql> select sum(Salary) from teacher;
++-------------+
+| sum(Salary) |
++-------------+
+|        4700 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> select avg(Score) from course C,sc
+    -> where C.Cname='数据库' and C.C=sc.C;
+ERROR 1054 (42S22): Unknown column 'C.Cname' in 'where clause'
+mysql> select S from sc
+    -> where Score<60
+    -> group by S Having count(*)>2;
++----------+
+| S        |
++----------+
+| 98030102 |
++----------+
+1 row in set (0.02 sec)
+
+mysql> select S from sc where C='002' UNION select S from sc where C='003';
++----------+
+| S        |
++----------+
+| 98030101 |
+| 98030102 |
+| 98030202 |
+| 98030203 |
++----------+
+4 rows in set (0.01 sec)
+
+
+mysql>

@@ -1,0 +1,221 @@
+Microsoft Windows [版本 10.0.19045.3448]
+(c) Microsoft Corporation。保留所有权利。
+
+C:\Users\ASUS>mysql -u root -p
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 36
+Server version: 5.7.43-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| demo               |
+| performance_schema |
+| test               |
++--------------------+
+4 rows in set (0.03 sec)
+
+mysql> use test;
+Database changed
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| demo               |
+| performance_schema |
+| test               |
++--------------------+
+4 rows in set (0.01 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_test |
++----------------+
+| compstud       |
+| course         |
+| mobile         |
+| sc             |
+| student        |
+| teacher        |
+| user           |
++----------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from compstud;
++----------+--------+------+------+------+--------+-------+
+| S        | Sname  | Ssex | Sage | D    | Sclass | saddr |
++----------+--------+------+------+------+--------+-------+
+| 98030101 | 张三   | 男   |   21 | 03   | 980301 | NULL  |
+| 98030103 | 张五   | 男   |   19 | 03   | 980301 | NULL  |
+| 98030101 | 王三   | 男   |   20 | 04   | 980302 | NULL  |
+| 98030103 | 王五   | 女   |   19 | 04   | 980302 | NULL  |
++----------+--------+------+------+------+--------+-------+
+4 rows in set (0.07 sec)
+
+mysql> select S,Sname from student
+    -> where Sname like "张__";
+Empty set (0.01 sec)
+
+mysql> select S,Sname from student
+    -> where Sname like "张_";
++----------+--------+
+| S        | Sname  |
++----------+--------+
+| 98030101 | 张三   |
+| 98030103 | 张五   |
++----------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student;
++----------+--------+------+------+------+--------+-------+
+| S        | Sname  | Ssex | Sage | D    | Sclass | saddr |
++----------+--------+------+------+------+--------+-------+
+| 98030101 | 张三   | 男   |   21 | 03   | 980301 | NULL  |
+| 98030103 | 张五   | 男   |   19 | 03   | 980301 | NULL  |
+| 98030101 | 王三   | 男   |   20 | 04   | 980302 | NULL  |
+| 98030103 | 王五   | 女   |   19 | 04   | 980302 | NULL  |
++----------+--------+------+------+------+--------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select S,Sname from student
+    -> where Sname not like "张%";
++----------+--------+
+| S        | Sname  |
++----------+--------+
+| 98030101 | 王三   |
+| 98030103 | 王五   |
++----------+--------+
+2 rows in set (0.01 sec)
+
+mysql> select * from teacher;
++------+--------+------+--------+
+| T    | Tname  | D    | Salary |
++------+--------+------+--------+
+| 001  | 赵三   | 01   |   1200 |
+| 002  | 赵四   | 03   |   1400 |
+| 003  | 赵五   | 03   |   1000 |
+| 004  | 赵六   | 04   |   1100 |
++------+--------+------+--------+
+4 rows in set (0.01 sec)
+
+mysql> select Sname from student
+    -> where exists(select * from sc,course where sc.C=course.C and sc.S=student.S and course.T=teacher.T and Tname='赵四';
+
+mysql> select distinct Sname from student
+    -> where exists(select * from sc,course,teacher where sc.C=course.C and sc.S=student.S and course.T=teacher.T and Tname='赵三');
++--------+
+| Sname  |
++--------+
+| 张三   |
+| 王三   |
++--------+
+2 rows in set (0.02 sec)
+
+mysql>  select Sname from student
+    ->  where exists(select * from sc,course where sc.C=course.C and sc.S=student.S and course.T=teacher.T and Tname='赵四');
+ERROR 1054 (42S22): Unknown column 'teacher.T' in 'where clause'
+mysql> select * from teacher;
++------+--------+------+--------+
+| T    | Tname  | D    | Salary |
++------+--------+------+--------+
+| 001  | 赵三   | 01   |   1200 |
+| 002  | 赵四   | 03   |   1400 |
+| 003  | 赵五   | 03   |   1000 |
+| 004  | 赵六   | 04   |   1100 |
++------+--------+------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select Sname from student
+    -> where not exists (select * from course,sc,teacher where Tname='李明' and course.T=teacher.T and course.C = sc.C and S=student.S);
++--------+
+| Sname  |
++--------+
+| 张三   |
+| 张五   |
+| 王三   |
+| 王五   |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> select T1.Tname as TR1,T2.Tname as TR2,T1.Salary-T2.Salary
+    -> from teacher T1,teacher T2
+    -> where T1.Salary>T2.Salary;
++--------+--------+---------------------+
+| TR1    | TR2    | T1.Salary-T2.Salary |
++--------+--------+---------------------+
+| 赵四   | 赵三   |                 200 |
+| 赵三   | 赵五   |                 200 |
+| 赵四   | 赵五   |                 400 |
+| 赵六   | 赵五   |                 100 |
+| 赵三   | 赵六   |                 100 |
+| 赵四   | 赵六   |                 300 |
++--------+--------+---------------------+
+6 rows in set (0.03 sec)
+
+mysql> select T1.Tname as TR1,T2.Tname as TR2
+    -> from teacher T1,teacher T2;
++--------+--------+
+| TR1    | TR2    |
++--------+--------+
+| 赵三   | 赵三   |
+| 赵四   | 赵三   |
+| 赵五   | 赵三   |
+| 赵六   | 赵三   |
+| 赵三   | 赵四   |
+| 赵四   | 赵四   |
+| 赵五   | 赵四   |
+| 赵六   | 赵四   |
+| 赵三   | 赵五   |
+| 赵四   | 赵五   |
+| 赵五   | 赵五   |
+| 赵六   | 赵五   |
+| 赵三   | 赵六   |
+| 赵四   | 赵六   |
+| 赵五   | 赵六   |
+| 赵六   | 赵六   |
++--------+--------+
+16 rows in set (0.00 sec)
+
+mysql> select S1.S as S1,S2.S as S2
+    -> from student S1,teacher.S2;
+ERROR 1146 (42S02): Table 'teacher.s2' doesn't exist
+mysql> select S1.S as S1,S2.S as S2
+    -> from student S1,teacher S2;
+ERROR 1054 (42S22): Unknown column 'S2.S' in 'field list'
+mysql> select S1.S as S1,S2.S as S2
+    -> from student S1,student S2;
++----------+----------+
+| S1       | S2       |
++----------+----------+
+| 98030101 | 98030101 |
+| 98030103 | 98030101 |
+| 98030101 | 98030101 |
+| 98030103 | 98030101 |
+| 98030101 | 98030103 |
+| 98030103 | 98030103 |
+| 98030101 | 98030103 |
+| 98030103 | 98030103 |
+| 98030101 | 98030101 |
+| 98030103 | 98030101 |
+| 98030101 | 98030101 |
+| 98030103 | 98030101 |
+| 98030101 | 98030103 |
+| 98030103 | 98030103 |
+| 98030101 | 98030103 |
+| 98030103 | 98030103 |
++----------+----------+
+16 rows in set (0.00 sec)
+
+mysql>

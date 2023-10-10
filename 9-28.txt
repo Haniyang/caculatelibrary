@@ -1,0 +1,137 @@
+Microsoft Windows [版本 10.0.19045.3448]
+(c) Microsoft Corporation。保留所有权利。
+
+C:\Users\ASUS>mysql -u root -p
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 20
+Server version: 5.7.43-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use test;
+Database changed
+mysql> create view CompStud as
+    -> (select * from student where D in(select D from course where Course='数据库'));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create view teacher as
+    -> (select T.Tname,C.Cname,Credit from teacher T,Course C where T.T=C.T);
+ERROR 1054 (42S22): Unknown column 'C.Cname' in 'field list'
+mysql> select * from CompStud;
++----------+--------+------+------+------+--------+-------+
+| S        | Sname  | Ssex | Sage | D    | Sclass | saddr |
++----------+--------+------+------+------+--------+-------+
+| 98030101 | 张三   | 男   |   20 | 03   | 980301 | NULL  |
+| 98030103 | 张五   | 男   |   19 | 03   | 980301 | NULL  |
+| 98030101 | 王三   | 男   |   20 | 04   | 980302 | NULL  |
+| 98030103 | 王五   | 女   |   19 | 04   | 980302 | NULL  |
++----------+--------+------+------+------+--------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from CompStud
+    -> where Sage<20;
++----------+--------+------+------+------+--------+-------+
+| S        | Sname  | Ssex | Sage | D    | Sclass | saddr |
++----------+--------+------+------+------+--------+-------+
+| 98030103 | 张五   | 男   |   19 | 03   | 980301 | NULL  |
+| 98030103 | 王五   | 女   |   19 | 04   | 980302 | NULL  |
++----------+--------+------+------+------+--------+-------+
+2 rows in set (0.01 sec)
+
+mysql> select T.Tname from teacher T
+    -> where T.Cname='数据库';
+ERROR 1054 (42S22): Unknown column 'T.Cname' in 'where clause'
+mysql> select T.Tname from teacher T
+    -> where T.Tname='数据库';
+Empty set (0.01 sec)
+
+mysql> create trigger sumc after after insert on sc
+    -> referencing new row newi
+    -> for each row
+    -> begin
+    -> updata student set SumCourse=SumCourse+1
+    -> where S=:newi.S;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'after insert on sc
+referencing new row newi
+for each row
+begin
+updata student s' at line 1
+mysql> create trigger sumc after after insert on sc
+    -> referencing new row newi
+    -> for each row
+    ->  begin
+    -> updata student set SumCourse=SumCourse+1
+    -> where S=:newi.S
+    -> end;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'after insert on sc
+referencing new row newi
+for each row
+ begin
+updata student s' at line 1
+mysql> select Sname,Sage from student where Sname='张三';
++--------+------+
+| Sname  | Sage |
++--------+------+
+| 张三   |   20 |
++--------+------+
+1 row in set (0.00 sec)
+
+mysql> select S from sc
+    -> where C='001' and Score >=all(select Score from sc where C='001');
++----------+
+| S        |
++----------+
+| 98030102 |
++----------+
+1 row in set (0.01 sec)
+
+mysql>  select C from sc
+    -> ,student S
+    -> where Sname='张三' and S.S=sc.S and Score<=all(select Score from sc where S=S.S);
++------+
+| C    |
++------+
+| 002  |
++------+
+1 row in set (0.00 sec)
+
+mysql> select* from student;
++----------+--------+------+------+------+--------+-------+
+| S        | Sname  | Ssex | Sage | D    | Sclass | saddr |
++----------+--------+------+------+------+--------+-------+
+| 98030101 | 张三   | 男   |   20 | 03   | 980301 | NULL  |
+| 98030103 | 张五   | 男   |   19 | 03   | 980301 | NULL  |
+| 98030101 | 王三   | 男   |   20 | 04   | 980302 | NULL  |
+| 98030103 | 王五   | 女   |   19 | 04   | 980302 | NULL  |
++----------+--------+------+------+------+--------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select C from sc
+    -> where S='98030101' and Score<=all(select Score from sc where S='98030101');
++------+
+| C    |
++------+
+| 002  |
++------+
+1 row in set (0.00 sec)
+
+mysql> select Sname from student
+    -> where S not in(select S from sc,course C,Teacher T where T.Tname='李明' and sc.C=C.C and T.T=C.T);
++--------+
+| Sname  |
++--------+
+| 张三   |
+| 张五   |
+| 王三   |
+| 王五   |
++--------+
+4 rows in set (0.00 sec)
+
+mysql>
